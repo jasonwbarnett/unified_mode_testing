@@ -1,3 +1,5 @@
+puts "\n\nbegin parsing hello_w_unified_mode\n\n"
+
 unified_mode true
 
 provides :hello_w_unified_mode
@@ -13,3 +15,5 @@ action :speak do
 
   puts "\n\n03. last hello #{new_resource.name}\n\n"
 end
+
+puts "\n\nend parsing hello_w_unified_mode\n\n"
