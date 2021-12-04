@@ -24,4 +24,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+puts "begin parsing recipe"
+
+hello_w_unified_mode "john"
+
 file "/tmp/one"
+
+hello_wo_unified_mode "tom"
+
+puts "end parsing recipe"
