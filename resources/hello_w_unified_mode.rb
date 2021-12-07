@@ -4,16 +4,26 @@ unified_mode true
 
 provides :hello_w_unified_mode
 
+property :person, String, name_property: true, identity: true
+property :file, String, default: '/tmp/hello_w_unified_mode.txt'
+
 action :speak do
-  puts "\n\n01. first hello #{new_resource.name}\n\n"
+  file new_resource.file do
+    owner 'root'
+    group 'root'
+    mode '0755'
+    compile_time true
+  end
+
+  File.open(new_resource.file, 'a') { |f| f.puts "\n\n01. first hello #{new_resource.person}\n\n" }
 
   ruby_block "sdf" do
     block do
-      puts "\n\n02. middle hello #{new_resource.name}\n\n"
+      File.open(new_resource.file, 'a') { |f| f.puts "\n\n02. middle hello #{new_resource.person}\n\n" }
     end
   end
 
-  puts "\n\n03. last hello #{new_resource.name}\n\n"
+  File.open(new_resource.file, 'a') { |f| f.puts "\n\n03. last hello #{new_resource.person}\n\n" }
 end
 
 puts "\n\nend parsing hello_w_unified_mode\n\n"

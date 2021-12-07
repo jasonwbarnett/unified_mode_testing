@@ -1,6 +1,6 @@
 #
 # Cookbook:: unified_mode_testing
-# Recipe:: default
+# Spec:: default
 #
 # The MIT License (MIT)
 #
@@ -24,16 +24,40 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-puts "begin parsing recipe"
+require 'spec_helper'
 
-hello_w_unified_mode 'First Pass' do
-  person node['unified_mode_testing']['person']
+shared_examples 'common behavior' do
+  it 'converges successfully' do
+    expect { chef_run }.to_not raise_error
+  end
+
+  it 'speaks in unified mode as expected' do
+    expect(chef_run).to speak_hello_w_unified_mode('First Pass').with(
+                          person: 'SYSTEM'
+                        )
+  end
+
+  it 'speaks in legacy mode as expected' do
+    expect(chef_run).to speak_hello_wo_unified_mode('Second Pass').with(
+                          person: 'SYSTEM'
+                        )
+  end
 end
 
-file "/tmp/one"
+describe 'unified_mode_testing::override' do
+  context 'When all person attribute is overridden, on Ubuntu 20.04' do
+    # for a complete list of available platforms and versions see:
+    # https://github.com/chefspec/fauxhai/blob/main/PLATFORMS.md
+    platform 'ubuntu', '20.04'
 
-hello_wo_unified_mode 'Second Pass' do
-  person node['unified_mode_testing']['person']
+    it_behaves_like('common behavior')
+  end
+
+  context 'When person attribute is overridden, on CentOS 8' do
+    # for a complete list of available platforms and versions see:
+    # https://github.com/chefspec/fauxhai/blob/main/PLATFORMS.md
+    platform 'centos', '8'
+
+    it_behaves_like('common behavior')
+  end
 end
-
-puts "end parsing recipe"
